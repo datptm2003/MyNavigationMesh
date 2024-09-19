@@ -3,7 +3,7 @@ package graph;
 import graph.edge.Edge;
 import graph.node.UndirectedNode;
 
-public class UndirectedGraph extends Graph<UndirectedNode, Edge> {
+public class UndirectedGraph<N extends UndirectedNode> extends Graph<N, Edge> {
     public UndirectedGraph() {
         super();
     }

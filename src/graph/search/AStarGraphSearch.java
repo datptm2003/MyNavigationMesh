@@ -2,7 +2,6 @@ package graph.search;
 
 import graph.UndirectedGraph;
 import graph.edge.Edge;
-import graph.node.Node;
 import graph.node.UndirectedNode;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -11,10 +10,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
-import utils.Vector3;
 
-public class GraphSearch_AStar extends GraphSearch<UndirectedGraph> {
-    public GraphSearch_AStar(UndirectedGraph graph) {
+public class AStarGraphSearch<N extends UndirectedNode> extends GraphSearch<UndirectedGraph<N>> {
+    public AStarGraphSearch(UndirectedGraph<N> graph) {
         super(graph);
     }
 
@@ -74,11 +72,14 @@ public class GraphSearch_AStar extends GraphSearch<UndirectedGraph> {
     }
 
     // Heuristic function, estimates the cost from node to the goal (Euclidean distance)
-    private int heuristic(Node node, Node goal) {
-        Vector3 pos1 = node.getPosition();
-        Vector3 pos2 = goal.getPosition();
-        return (int) Math.sqrt(Math.pow(pos1.getX() - pos2.getX(), 2) +
-                               Math.pow(pos1.getY() - pos2.getY(), 2) +
-                               Math.pow(pos1.getZ() - pos2.getZ(), 2));
+    protected int heuristic(UndirectedNode node, UndirectedNode goal) {
+        return 0;
     }
+    // private int heuristic(Node node, Node goal) {
+    //     Vector3 pos1 = node.getPosition();
+    //     Vector3 pos2 = goal.getPosition();
+    //     return (int) Math.sqrt(Math.pow(pos1.getX() - pos2.getX(), 2) +
+    //                            Math.pow(pos1.getY() - pos2.getY(), 2) +
+    //                            Math.pow(pos1.getZ() - pos2.getZ(), 2));
+    // }
 }

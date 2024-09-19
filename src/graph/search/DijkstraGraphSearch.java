@@ -11,8 +11,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.PriorityQueue;
 
-public class GraphSearch_Dijkstra extends GraphSearch<UndirectedGraph> {
-    public GraphSearch_Dijkstra(UndirectedGraph graph) {
+public class DijkstraGraphSearch<N extends UndirectedNode> extends GraphSearch<UndirectedGraph<N>> {
+    public DijkstraGraphSearch(UndirectedGraph<N> graph) {
         super(graph);
     }
 

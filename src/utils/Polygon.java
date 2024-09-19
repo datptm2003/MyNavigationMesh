@@ -1,10 +1,10 @@
 package utils;
 
-public class Mesh {
+public class Polygon {
     private float[] vertices; // Vertex positions (x, y, z)
     private int[] indices;    // Indexes for faces
 
-    public Mesh(float[] vertices, int[] indices) {
+    public Polygon(float[] vertices, int[] indices) {
         this.vertices = vertices;
         this.indices = indices;
     }
