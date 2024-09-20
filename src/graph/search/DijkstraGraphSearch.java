@@ -18,16 +18,16 @@ public class DijkstraGraphSearch<N extends UndirectedNode> extends GraphSearch<U
 
     @Override
     public List<Integer> search(int source, int destination) {
-        Map<Integer, Integer> distances = new HashMap<>(); // Stores distances from source
+        Map<Integer, Double> distances = new HashMap<>(); // Stores distances from source
         Map<Integer, Integer> previous = new HashMap<>();  // Stores previous nodes in optimal path
-        PriorityQueue<Integer> priorityQueue = new PriorityQueue<>(Comparator.comparingInt(distances::get));
+        PriorityQueue<Integer> priorityQueue = new PriorityQueue<>(Comparator.comparingDouble(distances::get));
 
         // Initialize distances
         for (UndirectedNode node : graph.getNodes().values()) {
-            distances.put(node.getId(), Integer.MAX_VALUE);
+            distances.put(node.getId(), Double.MAX_VALUE);
             previous.put(node.getId(), -1);
         }
-        distances.put(source, 0);
+        distances.put(source, 0d);
 
         priorityQueue.add(source);
 
@@ -46,7 +46,7 @@ public class DijkstraGraphSearch<N extends UndirectedNode> extends GraphSearch<U
                 int edgeId = entry.getValue();
                 Edge edge = graph.getEdgeById(edgeId);
 
-                int newDist = distances.get(currentNodeId) + edge.getCost();
+                double newDist = distances.get(currentNodeId) + edge.getCost();
 
                 if (newDist < distances.get(neighborId)) {
                     distances.put(neighborId, newDist);

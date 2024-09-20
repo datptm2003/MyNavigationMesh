@@ -2,9 +2,9 @@ package graph.edge;
 
 public class Edge {
     private final int id;
-    private final int cost;
+    private final double cost;
 
-    public Edge(int id, int cost) {
+    public Edge(int id, double cost) {
         this.id = id;
         this.cost = cost;
     }
@@ -13,7 +13,7 @@ public class Edge {
         return id;
     }
 
-    public int getCost() {
+    public double getCost() {
         return cost;
     }
 }

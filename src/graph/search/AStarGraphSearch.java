@@ -18,18 +18,18 @@ public class AStarGraphSearch<N extends UndirectedNode> extends GraphSearch<Undi
 
     @Override
     public List<Integer> search(int source, int destination) {
-        Map<Integer, Integer> gScore = new HashMap<>(); // Cost from start to the current node
-        Map<Integer, Integer> fScore = new HashMap<>(); // Estimated cost from start to goal through the current node
+        Map<Integer, Double> gScore = new HashMap<>(); // Cost from start to the current node
+        Map<Integer, Double> fScore = new HashMap<>(); // Estimated cost from start to goal through the current node
         Map<Integer, Integer> previous = new HashMap<>();  // To reconstruct the path
-        PriorityQueue<Integer> openSet = new PriorityQueue<>(Comparator.comparingInt(fScore::get));
+        PriorityQueue<Integer> openSet = new PriorityQueue<>(Comparator.comparingDouble(fScore::get));
 
         // Initialize scores
         for (UndirectedNode node : graph.getNodes().values()) {
-            gScore.put(node.getId(), Integer.MAX_VALUE);
-            fScore.put(node.getId(), Integer.MAX_VALUE);
+            gScore.put(node.getId(), Double.MAX_VALUE);
+            fScore.put(node.getId(), Double.MAX_VALUE);
             previous.put(node.getId(), -1);
         }
-        gScore.put(source, 0);
+        gScore.put(source, 0d);
         fScore.put(source, heuristic(graph.getNodeById(source), graph.getNodeById(destination)));
 
         openSet.add(source);
@@ -47,7 +47,7 @@ public class AStarGraphSearch<N extends UndirectedNode> extends GraphSearch<Undi
                 int edgeId = entry.getValue();
                 Edge edge = graph.getEdgeById(edgeId);
 
-                int tentativeGScore = gScore.get(currentNodeId) + edge.getCost();
+                double tentativeGScore = gScore.get(currentNodeId) + edge.getCost();
 
                 if (tentativeGScore < gScore.get(neighborId)) {
                     gScore.put(neighborId, tentativeGScore);
@@ -72,7 +72,7 @@ public class AStarGraphSearch<N extends UndirectedNode> extends GraphSearch<Undi
     }
 
     // Heuristic function, estimates the cost from node to the goal (Euclidean distance)
-    protected int heuristic(UndirectedNode node, UndirectedNode goal) {
+    protected double heuristic(UndirectedNode node, UndirectedNode goal) {
         return 0;
     }
     // private int heuristic(Node node, Node goal) {
