@@ -25,8 +25,8 @@ public class App {
     }
 
     public static void main(String[] args) {
-        testMeshGraph();
-        // testPointGraph();
+        // testMeshGraph();
+        testPointGraph();
     }
 
     private static void testMeshGraph() {
@@ -48,7 +48,16 @@ public class App {
         System.out.println(dijkstraSearch.search(0, 3));
 
         // Test A* algorithm
-        AStarGraphSearch<PointNode> aStarSearch = new AStarGraphSearch<>(graph);
+        AStarGraphSearch<PointNode> aStarSearch = new AStarGraphSearch<>(graph) {
+            @Override
+            protected double heuristic(PointNode node, PointNode goal) {
+                Vector3 pos1 = node.getPosition();
+                Vector3 pos2 = goal.getPosition();
+                return Math.sqrt(Math.pow(pos1.getX() - pos2.getX(), 2) +
+                                        Math.pow(pos1.getY() - pos2.getY(), 2) +
+                                        Math.pow(pos1.getZ() - pos2.getZ(), 2));
+            }
+        };
         System.out.println("A* Search: Shortest Path from Node 1 to Node 4");
         System.out.println(aStarSearch.search(0, 3));
     }
@@ -115,7 +124,7 @@ public class App {
         graph.addEdge(new Edge(Graph.getNextEdgeId(), 1)); 
         graph.addEdge(new Edge(Graph.getNextEdgeId(), 2));
         graph.addEdge(new Edge(Graph.getNextEdgeId(), 1));
-        graph.addEdge(new Edge(Graph.getNextEdgeId(), 4));
+        graph.addEdge(new Edge(Graph.getNextEdgeId(), 5));
 
         // Binding relations (edges) to nodes
         graph.bindRelation(0, 1, 0); 

@@ -49,7 +49,7 @@ public class AStarGraphSearch<N extends UndirectedNode> extends GraphSearch<Undi
 
                 double tentativeGScore = gScore.get(currentNodeId) + edge.getCost();
 
-                if (tentativeGScore < gScore.get(neighborId)) {
+                if (tentativeGScore + heuristic(graph.getNodeById(neighborId), graph.getNodeById(destination)) < fScore.get(neighborId)) {
                     gScore.put(neighborId, tentativeGScore);
                     previous.put(neighborId, currentNodeId);
                     fScore.put(neighborId, gScore.get(neighborId) + heuristic(graph.getNodeById(neighborId), graph.getNodeById(destination)));
@@ -72,13 +72,13 @@ public class AStarGraphSearch<N extends UndirectedNode> extends GraphSearch<Undi
     }
 
     // Heuristic function, estimates the cost from node to the goal (Euclidean distance)
-    protected double heuristic(UndirectedNode node, UndirectedNode goal) {
+    protected double heuristic(N node, N goal) {
         return 0;
     }
-    // private int heuristic(Node node, Node goal) {
+    // private doublw heuristic(N node, N goal) {
     //     Vector3 pos1 = node.getPosition();
     //     Vector3 pos2 = goal.getPosition();
-    //     return (int) Math.sqrt(Math.pow(pos1.getX() - pos2.getX(), 2) +
+    //     return Math.sqrt(Math.pow(pos1.getX() - pos2.getX(), 2) +
     //                            Math.pow(pos1.getY() - pos2.getY(), 2) +
     //                            Math.pow(pos1.getZ() - pos2.getZ(), 2));
     // }
