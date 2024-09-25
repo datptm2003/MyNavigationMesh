@@ -139,4 +139,8 @@ public class Quaternion {
 
         }
     }
+
+    public static Quaternion identity() {
+        return new Quaternion(1, new float[]{0,0,0});
+    }
 }
