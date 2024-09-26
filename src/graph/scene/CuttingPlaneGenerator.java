@@ -85,16 +85,115 @@ public class CuttingPlaneGenerator {
      */
     private static Mesh createMesh(List<Vector3> vertices) {
         float[] vertexArray = new float[vertices.size() * 3];
-        int[] indexArray = new int[vertices.size()];
-
         for (int i = 0; i < vertices.size(); i++) {
             Vector3 vertex = vertices.get(i);
             vertexArray[i * 3] = vertex.getX();
             vertexArray[i * 3 + 1] = vertex.getY();
             vertexArray[i * 3 + 2] = vertex.getZ();
-            indexArray[i] = i;
+        }
+
+        Set<int[]> edgeList = new HashSet<>();
+        List<Integer> indexList = new ArrayList<>();
+        for (int i = 0; i < vertices.size() - 2; i++) {
+            Vector3 v1 = vertices.get(i);
+            
+            for (int j = i + 1; j < vertices.size() - 1; j++) {
+                Vector3 v2 = vertices.get(j);
+                
+                Vector3[] e1 = new Vector3[2];
+                e1[0] = v1;
+                e1[1] = v2;
+                
+                boolean flag = false;
+                for (int[] edgeIndex : edgeList) {
+                    Vector3[] edge = new Vector3[2];
+                    edge[0] = vertices.get(edgeIndex[0]);
+                    edge[1] = vertices.get(edgeIndex[1]);
+                    if (checkIntersect2DSkipParallelism(e1, edge)) {
+                        flag = true;
+                        break;
+                    }
+                }
+                if (flag) break;
+                
+                for (int k = j + 1; k < vertices.size(); k++) {
+                    Vector3 v3 = vertices.get(k);
+                    
+                    Vector3[] e2 = new Vector3[2];
+                    e2[0] = v2;
+                    e2[1] = v3;
+                    for (int[] edgeIndex : edgeList) {
+                        Vector3[] edge = new Vector3[2];
+                        edge[0] = vertices.get(edgeIndex[0]);
+                        edge[1] = vertices.get(edgeIndex[1]);
+                        if (checkIntersect2DSkipParallelism(e2, edge)) {
+                            flag = true;
+                            break;
+                        }
+                    }
+                    if (flag) break;
+
+                    Vector3[] e3 = new Vector3[2];
+                    e3[0] = v3;
+                    e3[1] = v1;
+                    for (int[] edgeIndex : edgeList) {
+                        Vector3[] edge = new Vector3[2];
+                        edge[0] = vertices.get(edgeIndex[0]);
+                        edge[1] = vertices.get(edgeIndex[1]);
+                        if (checkIntersect2DSkipParallelism(e3, edge)) {
+                            flag = true;
+                            break;
+                        }
+                    }
+                    if (flag) break;
+
+                    indexList.add(i);
+                    indexList.add(j);
+                    indexList.add(k);
+
+                    edgeList.add(new int[]{i, j});
+                    edgeList.add(new int[]{j, k});
+                    edgeList.add(new int[]{k, i});
+
+                }
+            }
+        }
+
+        int[] indexArray = new int[indexList.size()];
+        for (int i = 0; i < indexList.size(); i++) {
+            indexArray[i] = indexList.get(i);
         }
 
         return new Mesh(vertexArray, indexArray);
+    }
+
+    private static boolean checkIntersect2DSkipParallelism(Vector3[] edge1, Vector3[] edge2) {
+        Vector3 e1v1 = edge1[0];
+        Vector3 e1v2 = edge1[1];
+        Vector3 e2v1 = edge2[0];
+        Vector3 e2v2 = edge2[1];
+
+        Vector3 dir1 = e1v1.subtract(e1v2);
+        Vector3 dir2 = e2v1.subtract(e2v2);
+
+        if (dir1.getX() / dir2.getX() == dir1.getZ() / dir2.getZ()) {
+            return false;
+        }
+        else {
+            float denominator = (dir1.getX() * dir2.getZ()) - (dir1.getZ() * dir2.getX());
+            if (denominator == 0) {
+                return false;  // The lines are parallel (this case is unlikely due to the above check, but it's a safeguard)
+            }
+
+            float t = ((e2v1.getX() - e1v1.getX()) * dir2.getZ() - (e2v1.getZ() - e1v1.getZ()) * dir2.getX()) / denominator;
+            float u = ((e2v1.getX() - e1v1.getX()) * dir1.getZ() - (e2v1.getZ() - e1v1.getZ()) * dir1.getX()) / denominator;
+
+            // Check if t and u are within the segment range (0 to 1)
+            if (t >= 0 && t <= 1 && u >= 0 && u <= 1) {
+                return true;  // The segments intersect
+            }
+        }
+
+        return false;
     }
 }

@@ -24,6 +24,10 @@ public class Vector3 {
         return new Vector3(this.x * scalar, this.y * scalar, this.z * scalar);
     }
 
+    public boolean equals(Vector3 other) {
+        return this.x == other.x && this.y == other.y && this.z == other.z;
+    }
+
     // Getters
     public float getX() { return x; }
     public float getY() { return y; }
