@@ -16,10 +16,12 @@ public class CuttingPlaneGenerator {
      * @param yPlaneValue The y-axis value of the cutting plane.
      * @return A Mesh representing the 2D cutting plane.
      */
-    public static Mesh generateCuttingPlane(List<ObjectInfo> ObjectInfos, float yPlaneValue) {
+    public static List<Mesh> generateCuttingPlaneMesh(List<ObjectInfo> ObjectInfos, float yPlaneValue) {
         List<Vector3> intersectionVertices = new ArrayList<>();
         Set<Integer> intersectionIndices = new HashSet<>();
         int indexCounter = 0;
+
+        List<Mesh> results = new ArrayList<>();
 
         // Iterate through each ObjectInfo and process their meshes
         for (ObjectInfo ObjectInfo : ObjectInfos) {
@@ -38,10 +40,46 @@ public class CuttingPlaneGenerator {
                 indexCounter = addIntersectionPoint(intersectionVertices, intersectionIndices, v2, v3, yPlaneValue, indexCounter);
                 indexCounter = addIntersectionPoint(intersectionVertices, intersectionIndices, v3, v1, yPlaneValue, indexCounter);
             }
+
+            Mesh planeMesh = createMesh(intersectionVertices);
+            results.add(planeMesh);
         }
 
         // Convert intersections into a mesh
-        return createMesh(intersectionVertices);
+        return results;
+    }
+
+    public static List<Vector3> generateCuttingPlane(List<ObjectInfo> ObjectInfos, float yPlaneValue) {
+        List<Vector3> intersectionVertices = new ArrayList<>();
+        Set<Integer> intersectionIndices = new HashSet<>();
+        int indexCounter = 0;
+
+        // List<Mesh> results = new ArrayList<>();
+
+        // Iterate through each ObjectInfo and process their meshes
+        for (ObjectInfo ObjectInfo : ObjectInfos) {
+            Mesh mesh = ObjectInfo.getMesh();
+            float[] vertices = mesh.getVertices();
+            int[] indices = mesh.getIndices();
+
+            // Process edges defined by the indices
+            for (int i = 0; i < indices.length; i += 3) {
+                Vector3 v1 = getVertex(vertices, indices[i]);
+                Vector3 v2 = getVertex(vertices, indices[i + 1]);
+                Vector3 v3 = getVertex(vertices, indices[i + 2]);
+
+                // Find intersections of edges with the y-plane
+                indexCounter = addIntersectionPoint(intersectionVertices, intersectionIndices, v1, v2, yPlaneValue, indexCounter);
+                indexCounter = addIntersectionPoint(intersectionVertices, intersectionIndices, v2, v3, yPlaneValue, indexCounter);
+                indexCounter = addIntersectionPoint(intersectionVertices, intersectionIndices, v3, v1, yPlaneValue, indexCounter);
+            }
+
+            // Mesh planeMesh = createMesh(intersectionVertices);
+            // results.add(planeMesh);
+        }
+
+        // Convert intersections into a mesh
+        return intersectionVertices;
     }
 
     /**

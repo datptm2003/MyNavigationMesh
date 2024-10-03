@@ -12,16 +12,22 @@ public class CuttingPlaneGeneratorTest {
     public static void main(String[] args) {
         // Step 1: Create sample objects with complex meshes
         List<ObjectInfo> objects = createSampleObjectInfos();
+        int idx = 0;
 
         // Step 2: Define a y-plane value for cutting
         float yPlaneValue = 0.5f;
 
         // Step 3: Generate the cutting plane mesh
-        Mesh cuttingPlaneMesh = CuttingPlaneGenerator.generateCuttingPlane(objects, yPlaneValue);
-        cuttingPlaneMesh.deduplicateVertices();
+        List<Mesh> cuttingPlaneMeshes = CuttingPlaneGenerator.generateCuttingPlaneMesh(objects, yPlaneValue);
+        // cuttingPlaneMeshes.deduplicateVertices();
 
         // Step 4: Output the result
-        printMesh(cuttingPlaneMesh);
+        for (Mesh mesh : cuttingPlaneMeshes) {
+            System.out.println("Mesh " + (idx++) + ":");
+            printMesh(mesh);
+            System.out.println("--------------------------------------------");
+        }
+        
     }
 
     /**

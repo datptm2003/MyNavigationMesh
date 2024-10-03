@@ -28,6 +28,11 @@ public class Vector3 {
         return this.x == other.x && this.y == other.y && this.z == other.z;
     }
 
+    // Function to calculate distance between two vertices
+    public float distance(Vector3 vec) {
+        return (float) Math.sqrt(Math.pow(this.getX() - vec.getX(), 2) + Math.pow(this.getY() - vec.getY(), 2));
+    }
+
     // Getters
     public float getX() { return x; }
     public float getY() { return y; }
